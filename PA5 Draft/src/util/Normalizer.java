@@ -40,7 +40,7 @@ public class Normalizer {
                 for (int j = 0; j < cells.length; j++){
                     cells[i] = normalize(cells[i]);
                 }
-                String normalizedRow = String.join(",", cells);
+                String normalizedRow = String.join(" ", cells);
                 list.add(normalizedRow);
             }
             else {

@@ -22,15 +22,29 @@ public class Main {
                 cells = lines.split(",");
              */
             //your code here. Use out.print or out.println, or out.printf
-            if (outFormat == "csv") {
-                for (int i = 0; i < cells.length; i++){
-                    out.print(cells[i] + ", ");
+            if (inFormat == "txt" && outFormat == "txt") {
+                for (int i = 0; i < cells.length - 1; i++){
+                    out.print(cells[i] + " ");
                 }
+                out.print(cells[cells.length]);
             }
-            if (outFormat == "txt") {
-                for (int j = 0; j < cells.length; j++) {
-                    out.print(cells[j] + " ");
+            if (inFormat == "csv" && outFormat == "txt") {
+                for (int i = 0; i < cells.length - 1; i++){
+                    out.print(cells[i] + " ");
                 }
+                out.print(cells[cells.length]);
+            }
+            if (inFormat == "csv" && outFormat == "csv") {
+                for (int j = 0; j < cells.length - 1; j++) {
+                    out.print(cells[j] + ", ");
+                }
+                out.print(cells[cells.length]);
+            }
+            if (inFormat == "txt" && outFormat == "csv") {
+                for (int j = 0; j < cells.length - 1; j++) {
+                    out.print(cells[j] + ", ");
+                }
+                out.print(cells[cells.length]);
             }
         }
     }
