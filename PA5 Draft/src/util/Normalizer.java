@@ -1,10 +1,12 @@
 package util;
+
 import java.util.*;
+
 public class Normalizer {
-    private static String normalize(String cell){
-        if(cell.isEmpty())
+    private static String normalize(String cell) {
+        if (cell.isEmpty())
             return "N/A";
-        try{
+        try {
             int ival = Integer.parseInt(cell);
             String rv = String.format("%+010d", ival);
             /*"" + Math.abs(ival);
@@ -12,48 +14,54 @@ public class Normalizer {
                 rv = "0" + rv;
             rv = (ival >= 0?"+": "-") + rv;*/
             return rv;
-        }catch(InputMismatchException exp){
-            try{
+        } catch (NumberFormatException exp) {
+            try {
                 //non-integer
                 double dval = Double.parseDouble(cell);
-                if(dval>100 || dval < .01)
+                if (dval > 100 || dval < .01)
                     return String.format("%.2e", dval);
                 else
                     return String.format("%.2f", dval);
-            }catch(InputMismatchException exp2){
+            } catch (NumberFormatException exp2) {
                 //non-numerical
-                if(cell.length() > 13)
+                if (cell.length() > 13)
                     return String.format("%.10s...", cell);
                 else
                     return cell;
             }
         }
     }
-    public static ArrayList<String>normalizeTable(ArrayList<String> rows, String fileFormat){
+
+    public static ArrayList<String> normalizeTable(ArrayList<String> rows, String fileFormat) {
         ArrayList<String> list = new ArrayList<String>();
         //Your code here:
         //Step 1: Break down every row into cells
         String[] cells;
-        for (int i = 0; i < rows.size(); i++) {
-            if (fileFormat.equalsIgnoreCase("txt")) {
+        String normalizedRow;
+
+        if (fileFormat.equalsIgnoreCase("txt")) {
+            for (int i = 0; i < rows.size(); i++) {
+
                 cells = rows.get(i).split(" ");
-                for (int j = 0; j < cells.length; j++){
-                    cells[i] = normalize(cells[i]);
+                for (String c: cells) {
+                    normalize(c);
                 }
-                String normalizedRow = String.join(" ", cells);
+                normalizedRow = String.join(" ", cells);
                 list.add(normalizedRow);
             }
-            else {
+        } else {
+            for (int i = 0; i < rows.size(); i++) {
                 cells = rows.get(i).split(",");
-                for (int j = 0; j < cells.length; j++){
-                    cells[i] = normalize(cells[i]);
+                for (int j = 0; j < cells.length; j++) {
+                    cells[j] = normalize(cells[j]);
                 }
-                String normalizedRow = String.join(",", cells);
+                normalizedRow = String.join(",", cells);
                 list.add(normalizedRow);
             }
         }
-        //Step 2: call normalize to normalize each cell
-        //Step 3: merge normalized cells with the same separator that you used to break them down.
         return list;
     }
+    //Step 2: call normalize to normalize each cell
+    //Step 3: merge normalized cells with the same separator that you used to break them down.
 }
+

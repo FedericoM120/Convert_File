@@ -12,6 +12,8 @@ public class Main {
     public static PrintWriter out;
     public static Scanner in;
     public static void convert(String inFormat, String outFormat){
+
+
         while(in.hasNextLine()){
             String line = in.nextLine();
             String[] cells = line.split(inFormat.equalsIgnoreCase("txt")?"\t": ",");
@@ -22,29 +24,18 @@ public class Main {
                 cells = lines.split(",");
              */
             //your code here. Use out.print or out.println, or out.printf
-            if (inFormat == "txt" && outFormat == "txt") {
+            if (inFormat.equalsIgnoreCase("csv")) {
                 for (int i = 0; i < cells.length - 1; i++){
                     out.print(cells[i] + " ");
                 }
-                out.print(cells[cells.length]);
+                out.print(cells[cells.length - 1]);
             }
-            if (inFormat == "csv" && outFormat == "txt") {
-                for (int i = 0; i < cells.length - 1; i++){
-                    out.print(cells[i] + " ");
-                }
-                out.print(cells[cells.length]);
-            }
-            if (inFormat == "csv" && outFormat == "csv") {
+
+            if (inFormat.equalsIgnoreCase("txt")) {
                 for (int j = 0; j < cells.length - 1; j++) {
                     out.print(cells[j] + ", ");
                 }
-                out.print(cells[cells.length]);
-            }
-            if (inFormat == "txt" && outFormat == "csv") {
-                for (int j = 0; j < cells.length - 1; j++) {
-                    out.print(cells[j] + ", ");
-                }
-                out.print(cells[cells.length]);
+                out.print(cells[cells.length - 1]);
             }
         }
     }
@@ -83,10 +74,10 @@ public class Main {
                         throw new Exception("Illegal output format! Supported formats: txt and csv");
                     if(tokens[1].equalsIgnoreCase(tokens[2]))
                         throw new Exception("source and destination files are the same for the convert command");
-                    in = new Scanner(new FileInputStream(tokens[1]));
-                    out = new PrintWriter(new FileOutputStream(tokens[2]));
+                    in = new Scanner(new FileInputStream(INPUT_PATH + tokens[1]));
+                    out = new PrintWriter(new FileOutputStream(OUTPUT_PATH + tokens[2]));
                     convert(inputFormat, outputFormat);
-
+                    System.out.println("Enter a new command or type quit to end program");
                 }else if(command.startsWith("normalize ")){
                     String[] tokens = command.split(" ");
                     if(tokens.length != 2)
@@ -94,18 +85,24 @@ public class Main {
                     String inputFormat = tokens[1].substring(tokens[1].length() - 3);
                     if(!inputFormat.equalsIgnoreCase("csv") && !inputFormat.equalsIgnoreCase("txt"))
                         throw new Exception("Illegal input format! Supported formats: txt and csv");
-                    ArrayList<String> rows = readFile(new FileInputStream(tokens[1]));
+                    ArrayList<String> rows = readFile(new FileInputStream( INPUT_PATH + tokens[1]));
                     ArrayList<String> normalizedRows = Normalizer.normalizeTable(rows, inputFormat);
-                    writeFile(normalizedRows, new FileOutputStream(tokens[1]));
-
+                    writeFile(normalizedRows, new FileOutputStream(OUTPUT_PATH + tokens[1]));
+                    System.out.println("Enter a new command or type the word quit to end program");
                 }else
                     throw new Exception("Illegal command is entered!");
             }catch (Exception exp){
                 System.out.println("Something went wrong: " + exp.getMessage() + "\nTry again!");
             }finally {
-                in.close();
-                out.close();
+                try{
+                    in.close();
+                    out.close();
+                } catch (Exception exp){
+
+                }
+
             }
         }
+        System.out.println("Check your output folder");
     }
 }
